@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { ethers } from "ethers";
 
@@ -18,8 +19,8 @@ export default function WalletButton() {
   };
 
   return (
-    <button className="btn" onClick={connectWallet}>
-      {account ? account.slice(0,6)+"..." : "Connect Wallet"}
+    <button onClick={connectWallet}>
+      {account ? account.slice(0, 6) + "..." : "Connect Wallet"}
     </button>
   );
 }

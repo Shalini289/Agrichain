@@ -1,30 +1,54 @@
 "use client";
+
 import { useState } from "react";
 
 export default function Chatbot() {
-  const [messages,setMessages] = useState([]);
-  const [input,setInput] = useState("");
+  const [msg, setMsg] = useState("");
+  const [reply, setReply] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const send = async () => {
-    const res = await fetch("/api/chat", {
-      method:"POST",
-      body: JSON.stringify({message:input}),
-      headers:{"Content-Type":"application/json"}
-    });
+    if (!msg) return;
+
+    setLoading(true);
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/chat`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg }),
+      }
+    );
 
     const data = await res.json();
-
-    setMessages([...messages,
-      {role:"user",text:input},
-      {role:"bot",text:data.reply}
-    ]);
+    setReply(data.reply);
+    setLoading(false);
   };
 
   return (
-    <div style={{position:"fixed",bottom:20,right:20}}>
-      {messages.map((m,i)=><p key={i}>{m.text}</p>)}
-      <input onChange={e=>setInput(e.target.value)}/>
-      <button onClick={send}>Send</button>
+    <div style={styles.box}>
+      <h3>🤖 AI Assistant</h3>
+
+      <input
+        placeholder="Ask something..."
+        onChange={(e) => setMsg(e.target.value)}
+      />
+
+      <button onClick={send}>
+        {loading ? "Thinking..." : "Ask"}
+      </button>
+
+      {reply && <p style={{ marginTop: 10 }}>💬 {reply}</p>}
     </div>
   );
 }
+
+const styles = {
+  box: {
+    marginTop: 40,
+    padding: 20,
+    borderRadius: 15,
+    background: "rgba(255,255,255,0.05)",
+  },
+};

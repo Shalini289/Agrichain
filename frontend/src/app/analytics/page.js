@@ -1,23 +1,29 @@
 "use client";
+
 import { useEffect, useState } from "react";
-import axios from "axios";
-import Chart from "../../components/Chart";
+import AdvancedAnalytics from "@/components/AdvancedAnalytics";
 
 export default function Analytics() {
-  const [prices, setPrices] = useState([]);
+  const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/crops")
-      .then(res => {
-        const p = res.data.map(c => c.price);
-        setPrices(p);
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/crops`)
+      .then(res => res.json())
+      .then(crops => {
+        const prices = crops.map(c => c.price);
+        setData(prices);
       });
   }, []);
 
   return (
-    <div className="card">
-      <h2>Analytics</h2>
-      <Chart prices={prices} />
+    <div>
+      <h1>📈 Analytics</h1>
+
+      {data.length > 0 ? (
+        <AdvancedAnalytics data={data} />
+      ) : (
+        <p>No data available</p>
+      )}
     </div>
   );
 }
