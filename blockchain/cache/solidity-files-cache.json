@@ -1,0 +1,77 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "C:\\Users\\shali\\Complete Projects\\farmer\\blockchain\\contracts\\AgriChain.sol": {
+      "lastModificationDate": 1776538707276,
+      "contentHash": "efbc15809a7fb3de1b805304d9f8350c",
+      "sourceName": "contracts/AgriChain.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "AgriChain"
+      ]
+    },
+    "C:\\Users\\shali\\Complete Projects\\farmer\\blockchain\\contracts\\SupplyChain.sol": {
+      "lastModificationDate": 1776525804778,
+      "contentHash": "9f0410c23fed93c58b25f42466fd2cd0",
+      "sourceName": "contracts/SupplyChain.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "SupplyChain"
+      ]
+    }
+  }
+}

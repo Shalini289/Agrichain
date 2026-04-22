@@ -1,0 +1,16 @@
+.passwordBox {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.passwordBox span {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
+}
+
+.strength {
+  font-size: 12px;
+  margin: 5px 0;
+}
