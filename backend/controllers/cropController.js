@@ -6,18 +6,50 @@ export const addCrop = async (req, res) => {
   const { name, quantity, price } = req.body;
 
   try {
-    const txHash = await addCropOnChain(name, quantity, price);
+    if (!name || quantity === undefined || price === undefined) {
+      return res.status(400).json({ message: "Name, quantity, and price are required" });
+    }
+
+    const numericQuantity = Number(quantity);
+    const numericPrice = Number(price);
+
+    if (!Number.isFinite(numericQuantity) || numericQuantity <= 0) {
+      return res.status(400).json({ message: "Quantity must be a positive number" });
+    }
+
+    if (!Number.isFinite(numericPrice) || numericPrice <= 0) {
+      return res.status(400).json({ message: "Price must be a positive number" });
+    }
+
+    let txHash = null;
+    let blockchainWarning = "";
+    try {
+      txHash = await addCropOnChain(name.trim(), numericQuantity, numericPrice);
+    } catch (chainErr) {
+      if (process.env.BLOCKCHAIN_REQUIRED === "true") {
+        throw chainErr;
+      }
+
+      blockchainWarning =
+        chainErr.code === "INSUFFICIENT_FUNDS"
+          ? "Crop saved locally. Add Sepolia ETH to the backend wallet to write future crops on-chain."
+          : "Crop saved locally. Blockchain write was skipped.";
+      console.warn("Blockchain write skipped:", chainErr.message);
+    }
 
     const crop = await Crop.create({
-      name,
-      quantity,
-      price,
+      name: name.trim(),
+      quantity: numericQuantity,
+      price: numericPrice,
       farmer: req.user._id,
       txHash,
       history: [{ role: "Farmer" }]
     });
 
-    res.json(crop);
+    res.json({
+      ...crop.toObject(),
+      blockchainWarning,
+    });
 
   } catch (err) {
     res.status(500).json({ message: err.message });

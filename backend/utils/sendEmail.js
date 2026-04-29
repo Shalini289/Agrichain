@@ -1,18 +1,25 @@
-import { transporter } from "../config/mail.js";
+import nodemailer from "nodemailer";
 
-const sendEmail = async (to, subject, text) => {
-  try {
-    await transporter.sendMail({
-      from: `"AgriChain" <${process.env.EMAIL}>`,
-      to,
-      subject,
-      text
-    });
+export const sendEmail = async (to, subject, text) => {
+  const user = process.env.EMAIL_USER || process.env.EMAIL;
+  const pass = process.env.EMAIL_PASS || process.env.EMAIL_PASSWORD;
 
-    console.log("Email sent");
-  } catch (err) {
-    console.error("Email error:", err.message);
+  if (!user || !pass) {
+    throw new Error("Email credentials are not configured");
   }
-};
 
-export default sendEmail;
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user,
+      pass,
+    },
+  });
+
+  await transporter.sendMail({
+    from: user,
+    to,
+    subject,
+    text,
+  });
+};

@@ -1,16 +1,23 @@
-import { apiRequest } from "./api";
+import { apiRequest } from "./apiService";
 
 // 🔐 Register
-export const registerUser = (data) =>
-  apiRequest("/api/auth/register", {
-    method: "POST",
-    body: JSON.stringify(data),
-  });
+export const authService = {
+  register: async (payload) => {
+    const data = await apiRequest("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    return data;
+  },
+};
 
 // 🔐 Login
 export const loginUser = (data) =>
   apiRequest("/api/auth/login", {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
 

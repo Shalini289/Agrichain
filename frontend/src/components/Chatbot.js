@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import "@/styles/dashboard.css";
 
 export default function Chatbot() {
   const [msg, setMsg] = useState("");
@@ -8,47 +9,62 @@ export default function Chatbot() {
   const [loading, setLoading] = useState(false);
 
   const send = async () => {
-    if (!msg) return;
+    if (!msg.trim() || loading) return;
 
     setLoading(true);
 
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/chat`,
-      {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: msg }),
-      }
-    );
+        credentials: "include",
+        body: JSON.stringify({ message: msg.trim() }),
+      });
 
-    const data = await res.json();
-    setReply(data.reply);
-    setLoading(false);
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(data.message || "AI request failed");
+      }
+
+      setReply(data.reply || "No response returned.");
+      setMsg("");
+    } catch (err) {
+      setReply(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div style={styles.box}>
-      <h3>🤖 AI Assistant</h3>
+    <div className="chatbot">
+      <div className="chatbot-header">
+        <h3>AI Assistant</h3>
+        <span>Ask anything about crops and prices</span>
+      </div>
 
-      <input
-        placeholder="Ask something..."
-        onChange={(e) => setMsg(e.target.value)}
-      />
+      <div className="chatbox">
+        {reply ? (
+          <div className="chat-message bot">{reply}</div>
+        ) : (
+          <div className="chat-placeholder">
+            Ask me anything about farming, prices, or predictions...
+          </div>
+        )}
+      </div>
 
-      <button onClick={send}>
-        {loading ? "Thinking..." : "Ask"}
-      </button>
+      <div className="chat-input">
+        <input
+          value={msg}
+          placeholder="Type your question..."
+          onChange={(e) => setMsg(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && send()}
+        />
 
-      {reply && <p style={{ marginTop: 10 }}>💬 {reply}</p>}
+        <button onClick={send} disabled={loading}>
+          {loading ? "..." : "Send"}
+        </button>
+      </div>
     </div>
   );
 }
-
-const styles = {
-  box: {
-    marginTop: 40,
-    padding: 20,
-    borderRadius: 15,
-    background: "rgba(255,255,255,0.05)",
-  },
-};

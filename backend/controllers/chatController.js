@@ -1,4 +1,4 @@
-import { askAI } from "../services/aiService.js";
+import { askAI, getAIPrediction } from "../services/aiService.js";
 
 export const chat = async (req, res) => {
   try {
@@ -15,6 +15,18 @@ export const chat = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       message: "AI service error",
+      error: err.message
+    });
+  }
+};
+
+export const predict = async (req, res) => {
+  try {
+    const prediction = await getAIPrediction();
+    res.json(prediction);
+  } catch (err) {
+    res.status(500).json({
+      message: "AI prediction error",
       error: err.message
     });
   }

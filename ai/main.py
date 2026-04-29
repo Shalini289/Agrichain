@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from routes.chat import router as chat_router
-from routes.health import router as health_router
+from .routes.chat import router as chat_router
+from .routes.health import router as health_router
 
 app = FastAPI(
     title="AgriChain AI Service",

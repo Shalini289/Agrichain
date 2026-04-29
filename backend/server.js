@@ -1,53 +1,80 @@
 import express from "express";
-import dotenv from "dotenv";
+import http from "http";
 import cors from "cors";
+import "dotenv/config";
 import cookieParser from "cookie-parser";
+import session from "express-session";
+import { Server } from "socket.io";
+import { pathToFileURL } from "url";
 
-import connectDB from "./config/db.js";
-
-// Routes
 import authRoutes from "./routes/authRoutes.js";
 import cropRoutes from "./routes/cropRoutes.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
-
-// Middleware
+import connectDB from "./config/db.js";
 import { errorHandler } from "./middleware/errorMiddleware.js";
-
-dotenv.config();
-
-// Connect DB
-connectDB();
+import { socketHandler } from "./sockets/socketHandler.js";
 
 const app = express();
-
-// 🔧 Body parser
-app.use(express.json());
-
-// 🍪 Cookies
-app.use(cookieParser());
-
-// 🌍 CORS
-app.use(cors({
-  origin: process.env.CLIENT_URL,
-  credentials: true
-}));
-
-// 📌 Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/crops", cropRoutes);
-app.use("/api/chat", chatRoutes);
-
-// 🏠 Health check
-app.get("/", (req, res) => {
-  res.send("API running...");
-});
-
-// ❌ Error handler (LAST)
-app.use(errorHandler);
-
-// 🚀 Server start
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000";
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.use(express.json());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: CLIENT_URL,
+    credentials: true,
+  })
+);
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || process.env.JWT_SECRET || "dev-session-secret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      sameSite: "lax",
+    },
+  })
+);
+
+app.use("/api/auth", authRoutes);
+app.use("/api/crops", cropRoutes);
+app.use("/api/analytics", analyticsRoutes);
+app.use("/api/chat", chatRoutes);
+
+app.get("/", (req, res) => {
+  res.send("AgriChain API Running");
 });
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: CLIENT_URL,
+    credentials: true,
+  },
+});
+
+socketHandler(io);
+
+export { app, io, server };
+
+app.use(errorHandler);
+
+export const startServer = async () => {
+  await connectDB();
+  return server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+const isMain = process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href;
+
+if (isMain) {
+  startServer().catch((err) => {
+    console.error(err.message);
+    process.exit(1);
+  });
+}

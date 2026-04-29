@@ -1,8 +1,6 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-import { Inter } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"] });
+import Notification from "@/components/Notification";
 
 export const metadata = {
   title: "AgriChain 🌾",
@@ -11,19 +9,31 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-
+    <html lang="en" data-scroll-behavior="smooth">
+      <body>
+        
         {/* 🌈 Background */}
-        <div className="bg-gradient" />
+        <div className="bg-gradient"></div>
 
-        {/* 🌐 Navbar */}
-        <Navbar />
+        {/* 🧭 Navbar */}
+        <header>
+          <Navbar />
+        </header>
 
-        {/* 📦 Main Container */}
+        {/* 🔔 Notifications */}
+        <div className="notification-wrapper">
+          <Notification />
+        </div>
+
+        {/* 📦 Main Content */}
         <main className="container">
           {children}
         </main>
+
+        {/* 🌿 Footer */}
+        <footer>
+          © {new Date().getFullYear()} AgriChain 🌾 — Powered by AI + Blockchain
+        </footer>
 
       </body>
     </html>

@@ -1,17 +1,11 @@
 def generate_explanation(predicted_price):
-
     if predicted_price > 35:
         return (
-            "📈 Prices are rising due to high demand and limited supply. "
-            "Selling now can maximize profit."
+            "Prices are rising because demand is strong and supply appears limited. "
+            "Selling now can help maximize profit."
         )
 
-    elif predicted_price > 25:
-        return (
-            "⚖️ Market is stable. You can sell now or wait for slight gains."
-        )
+    if predicted_price > 25:
+        return "The market is stable. You can sell now or wait briefly for small gains."
 
-    else:
-        return (
-            "📉 Prices are low due to oversupply. Waiting is recommended."
-        )
+    return "Prices are low because supply appears high. Waiting is recommended."

@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
 
 class ChatMessage(BaseModel):
@@ -7,7 +7,7 @@ class ChatMessage(BaseModel):
 
 class ChatRequest(BaseModel):
     message: str
-    history: Optional[List[ChatMessage]] = []
+    history: Optional[List[ChatMessage]] = Field(default_factory=list)
 
 class ChatResponse(BaseModel):
     reply: str

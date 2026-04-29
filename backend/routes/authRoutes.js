@@ -1,31 +1,25 @@
 import express from "express";
 import {
-  register,
   login,
+  logout,
+  me,
+  nonce,
+  refresh,
+  register,
+  siwe,
   verifyEmail,
-  walletLogin,
-  refreshToken,
-  getProfile
 } from "../controllers/authController.js";
-
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
-// 📌 Register + email verify
 router.post("/register", register);
-router.get("/verify/:token", verifyEmail);
-
-// 🔐 Login
 router.post("/login", login);
-
-// 🔗 Wallet login
-router.post("/wallet", walletLogin);
-
-// 🔄 Refresh token
-router.get("/refresh", refreshToken);
-
-// 👤 Profile
-router.get("/me", protect, getProfile);
+router.get("/verify/:token", verifyEmail);
+router.get("/me", protect, me);
+router.get("/refresh", protect, refresh);
+router.get("/logout", logout);
+router.get("/nonce", nonce);
+router.post("/siwe", siwe);
 
 export default router;

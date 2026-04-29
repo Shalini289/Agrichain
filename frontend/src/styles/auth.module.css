@@ -1,54 +1,185 @@
 .container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 80vh;
+  min-height: calc(100vh - 190px);
+  display: grid;
+  place-items: center;
+  padding: 34px 0;
 }
 
 .card {
-  background: rgba(255,255,255,0.05);
+  width: min(100%, 440px);
   padding: 30px;
-  border-radius: 15px;
-  width: 320px;
-  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background:
+    linear-gradient(160deg, rgba(69, 212, 131, 0.12), transparent 48%),
+    rgba(255, 255, 255, 0.08);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(20px);
 }
 
-.card h2 {
-  text-align: center;
+.title {
+  font-size: clamp(1.75rem, 4vw, 2.45rem);
+  line-height: 1.05;
+  font-weight: 900;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: var(--muted);
+  line-height: 1.6;
   margin-bottom: 20px;
 }
 
-.card input {
+.input {
   width: 100%;
-  margin: 10px 0;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
+  min-height: 48px;
+  margin-top: 12px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(4, 12, 8, 0.58);
+  color: var(--text);
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+}
+
+.input::placeholder {
+  color: #829188;
+}
+
+.input:focus {
+  border-color: rgba(69, 212, 131, 0.72);
+  box-shadow: 0 0 0 3px rgba(69, 212, 131, 0.14);
+  background: rgba(4, 12, 8, 0.78);
 }
 
 .passwordBox {
   position: relative;
 }
 
-.passwordBox span {
+.passwordBox .input {
+  padding-right: 48px;
+}
+
+.eye {
   position: absolute;
-  right: 10px;
-  top: 12px;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  color: var(--muted);
   cursor: pointer;
+  transition: color 180ms ease, border-color 180ms ease;
 }
 
-button {
+.eye:hover {
+  color: var(--primary);
+  border-color: rgba(69, 212, 131, 0.45);
+}
+
+.button {
   width: 100%;
-  padding: 10px;
-  margin-top: 15px;
-  background: linear-gradient(90deg,#00c6ff,#0072ff);
-  border: none;
-  color: white;
-  border-radius: 8px;
+  min-height: 48px;
+  margin-top: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--primary), var(--gold));
+  color: #07110d;
   cursor: pointer;
+  font-weight: 900;
+  text-decoration: none;
+  box-shadow: 0 18px 40px rgba(69, 212, 131, 0.18);
+  transition: transform 180ms ease, box-shadow 180ms ease, opacity 180ms ease;
 }
 
-.strength {
-  font-size: 12px;
-  color: #ccc;
+.button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 22px 50px rgba(231, 183, 95, 0.18);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.62;
+}
+
+.footer {
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 0.94rem;
+  text-align: center;
+}
+
+.footer a {
+  color: var(--primary);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.error,
+.hint,
+.success,
+.passwordMatch,
+.passwordMismatch,
+.strengthText {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.error,
+.passwordMismatch {
+  color: var(--danger);
+}
+
+.hint,
+.strengthText {
+  color: var(--muted);
+}
+
+.success,
+.passwordMatch {
+  color: var(--primary);
+}
+
+.strengthBox {
+  margin-top: 10px;
+}
+
+.strengthBar {
+  height: 7px;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+.weak {
+  width: 33%;
+  background: var(--danger);
+}
+
+.medium {
+  width: 66%;
+  background: var(--gold);
+}
+
+.strong {
+  width: 100%;
+  background: var(--primary);
+}
+
+@media (max-width: 520px) {
+  .card {
+    padding: 22px;
+  }
 }

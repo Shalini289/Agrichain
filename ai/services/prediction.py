@@ -1,27 +1,30 @@
-import joblib
-import numpy as np
 import os
 
-MODEL_PATH = os.path.join("models", "model.pkl")
-
-# Load model once
 try:
-    model = joblib.load(MODEL_PATH)
-except:
-    model = None
-    print("⚠️ Model not found. Using fallback.")
+    import joblib
+    import numpy as np
+except ImportError:
+    joblib = None
+    np = None
+
+MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "models", "model.pkl")
+
+model = None
+if joblib is not None:
+    try:
+        model = joblib.load(MODEL_PATH)
+    except Exception:
+        model = None
 
 
 def predict_price():
+    current_price = 30
+    demand = 100
+    season = 1
 
-    # Example features:
-    # [current_price, demand, season]
-    data = np.array([[30, 100, 1]])
-
-    if model:
+    if model is not None and np is not None:
+        data = np.array([[current_price, demand, season]])
         prediction = model.predict(data)[0]
-    else:
-        # fallback logic
-        prediction = data[0][0] + 5
+        return round(float(prediction), 2)
 
-    return round(float(prediction), 2)
+    return round(float(current_price + 5), 2)

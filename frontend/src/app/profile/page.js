@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import"@/styles/profile.css";
 export default function Profile() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,31 +18,57 @@ export default function Profile() {
       .catch(() => setLoading(false));
   }, []);
 
-  if (loading) return <p>Loading profile...</p>;
+  if (loading) {
+    return (
+      <div className="profile-loading">
+        ⏳ Loading profile...
+      </div>
+    );
+  }
 
-  if (!user) return <p>Not logged in ❌</p>;
+  if (!user) {
+    return (
+      <div className="profile-empty">
+        ❌ Not logged in
+      </div>
+    );
+  }
 
   return (
-    <div style={{ maxWidth: 500 }}>
-      <h1>👤 Profile</h1>
+    <div className="profile">
 
-      <div
-        style={{
-          marginTop: 20,
-          padding: 20,
-          borderRadius: 15,
-          background: "rgba(255,255,255,0.05)",
-        }}
-      >
-        <p><strong>Name:</strong> {user.name || "N/A"}</p>
-        <p><strong>Email:</strong> {user.email || "N/A"}</p>
-        <p><strong>Wallet:</strong> {user.wallet || "Not connected"}</p>
-
-        <p>
-          <strong>Status:</strong>{" "}
+      {/* 👤 HEADER */}
+      <div className="profile-header">
+        <h1>👤 Profile</h1>
+        <span className={user.isVerified ? "status verified" : "status not-verified"}>
           {user.isVerified ? "✅ Verified" : "❌ Not Verified"}
-        </p>
+        </span>
       </div>
+
+      {/* 📦 CARD */}
+      <div className="profile-card">
+
+        <div className="profile-item">
+          <span>Name</span>
+          <strong>{user.name || "N/A"}</strong>
+        </div>
+
+        <div className="profile-item">
+          <span>Email</span>
+          <strong>{user.email || "N/A"}</strong>
+        </div>
+
+        <div className="profile-item">
+          <span>Wallet</span>
+          <strong>
+            {user.wallet
+              ? `${user.wallet.slice(0, 6)}...${user.wallet.slice(-4)}`
+              : "Not connected"}
+          </strong>
+        </div>
+
+      </div>
+
     </div>
   );
 }

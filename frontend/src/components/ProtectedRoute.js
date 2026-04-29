@@ -12,8 +12,9 @@ export default function ProtectedRoute({ children }) {
     })
       .then(res => {
         if (!res.ok) router.push("/login");
-      });
-  }, []);
+      })
+      .catch(() => router.push("/login"));
+  }, [router]);
 
   return children;
 }

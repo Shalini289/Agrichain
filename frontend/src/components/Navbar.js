@@ -1,66 +1,88 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
+import { Menu, Sprout, X } from "lucide-react";
+import WalletButton from "./WalletButton";
+import "@/styles/navbar.css";
 
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const menuRef = useRef();
+
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Dashboard", path: "/dashboard" },
+    { name: "Add Crop", path: "/add" },
+    { name: "Analytics", path: "/analytics" },
+    { name: "Profile", path: "/profile" },
+  ];
+
+  useEffect(() => {
+    queueMicrotask(() => setOpen(false));
+  }, [pathname]);
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const isActive = (path) => {
+    if (path === "/") return pathname === "/";
+    return pathname.startsWith(path);
+  };
 
   return (
-    <div style={styles.navbar}>
-      <h2 style={styles.logo}>🌾 AgriChain</h2>
+    <nav className="navbar">
+      <Link href="/" className="logo">
+        <span aria-hidden="true">
+          <Sprout size={18} />
+        </span>
+        <strong>AgriChain</strong>
+      </Link>
 
-      <div style={styles.links} className="desktop">
-        <Link href="/">Home</Link>
-        <Link href="/dashboard">Dashboard</Link>
-        <Link href="/analytics">Analytics</Link>
-        <Link href="/profile">Profile</Link>
+      <div className="nav-links">
+        {navLinks.map((link) => (
+          <Link
+            key={link.path}
+            href={link.path}
+            className={isActive(link.path) ? "active" : ""}
+          >
+            {link.name}
+          </Link>
+        ))}
       </div>
 
-      <div style={styles.right}>
+      <div className="nav-right">
         <WalletButton />
-        <span style={styles.menu} onClick={() => setOpen(!open)}>☰</span>
+        <button
+          className="menu-btn"
+          onClick={() => setOpen((prev) => !prev)}
+          aria-label="Toggle menu"
+        >
+          {open ? <X size={18} /> : <Menu size={18} />}
+        </button>
       </div>
 
-      {open && (
-        <div style={styles.mobile}>
-          <Link href="/">Home</Link>
-          <Link href="/dashboard">Dashboard</Link>
-          <Link href="/analytics">Analytics</Link>
-          <Link href="/profile">Profile</Link>
-        </div>
-      )}
-    </div>
+      <div ref={menuRef} className={`mobile-menu ${open ? "open" : ""}`}>
+        {navLinks.map((link) => (
+          <Link
+            key={link.path}
+            href={link.path}
+            className={isActive(link.path) ? "active" : ""}
+          >
+            {link.name}
+          </Link>
+        ))}
+      </div>
+    </nav>
   );
 }
-
-import WalletButton from "./WalletButton";
-
-const styles = {
-  navbar: {
-    position: "fixed",
-    top: 0,
-    width: "100%",
-    padding: "15px 30px",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    background: "rgba(0,0,0,0.7)",
-    backdropFilter: "blur(10px)",
-    zIndex: 1000,
-  },
-  logo: { color: "#00c6ff" },
-  links: { display: "flex", gap: 20 },
-  right: { display: "flex", gap: 15 },
-  menu: { cursor: "pointer", fontSize: 20 },
-  mobile: {
-    position: "absolute",
-    top: 60,
-    right: 10,
-    background: "#111",
-    padding: 10,
-    borderRadius: 10,
-    display: "flex",
-    flexDirection: "column",
-  },
-};

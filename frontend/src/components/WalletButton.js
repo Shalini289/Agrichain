@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Wallet } from "lucide-react";
 import { ethers } from "ethers";
 
 export default function WalletButton() {
@@ -20,7 +21,8 @@ export default function WalletButton() {
 
   return (
     <button onClick={connectWallet}>
-      {account ? account.slice(0, 6) + "..." : "Connect Wallet"}
+      <Wallet size={16} />
+      {account ? `${account.slice(0, 6)}...${account.slice(-4)}` : "Wallet"}
     </button>
   );
 }
