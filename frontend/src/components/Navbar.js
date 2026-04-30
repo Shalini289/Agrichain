@@ -14,6 +14,8 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Home", path: "/" },
+    { name: "Marketplace", path: "/marketplace" },
+    { name: "Compare", path: "/compare" },
     { name: "Dashboard", path: "/dashboard" },
     { name: "Add Crop", path: "/add" },
     { name: "Analytics", path: "/analytics" },

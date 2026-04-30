@@ -21,7 +21,7 @@ export const useAuthStore = create((set) => ({
 
   logout: async () => {
     try {
-      await API.get("/api/auth/logout");
+      await API.post("/api/auth/logout");
     } finally {
       set({ user: null, role: null, loading: false });
     }

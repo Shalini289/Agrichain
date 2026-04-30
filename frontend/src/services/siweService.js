@@ -9,9 +9,10 @@ export const signInWithEthereum = async () => {
   const address = await signer.getAddress();
 
   // 1️⃣ Get nonce
-  const nonceRes = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/auth/nonce`
-  );
+  const nonceRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/nonce`, {
+    method: "POST",
+    credentials: "include",
+  });
   const { nonce } = await nonceRes.json();
 
   // 2️⃣ Create message

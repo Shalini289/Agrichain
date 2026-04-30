@@ -27,8 +27,8 @@ export const getProfile = () =>
 
 // 🔄 Refresh token
 export const refreshToken = () =>
-  apiRequest("/api/auth/refresh");
+  apiRequest("/api/auth/refresh", { method: "POST" });
 
 // 🚪 Logout
 export const logoutUser = () =>
-  apiRequest("/api/auth/logout");
+  apiRequest("/api/auth/logout", { method: "POST" });

@@ -23,8 +23,9 @@ API.interceptors.response.use(
       original._retry = true;
 
       try {
-        await axios.get(
+        await axios.post(
           `${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh`,
+          null,
           { withCredentials: true }
         );
 

@@ -60,8 +60,8 @@ export default function Home() {
             transition={{ delay: 0.35 }}
             className="hero-buttons"
           >
-            <Link href="/dashboard" className="btn btn-primary">Open Dashboard</Link>
-            <Link href="/login" className="btn btn-secondary">Login</Link>
+            <Link href="/marketplace" className="btn btn-primary">Explore Marketplace</Link>
+            <Link href="/dashboard" className="btn btn-secondary">Open Dashboard</Link>
           </motion.div>
         </div>
 

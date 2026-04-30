@@ -36,7 +36,8 @@ export default function Register() {
     },
     password: (value) => {
       if (!value) return "Password is required";
-      if (value.length < 6) return "Password must be at least 6 characters";
+      if (value.length < 8) return "Password must be at least 8 characters";
+      if (value.length > 128) return "Password must be 128 characters or less";
       return "";
     },
     confirmPassword: (value) => {
@@ -54,7 +55,7 @@ export default function Register() {
   };
 
   const passwordScore = [
-    form.password.length >= 6,
+    form.password.length >= 8,
     /[A-Z]/.test(form.password),
     /[a-z]/.test(form.password),
     /\d/.test(form.password),

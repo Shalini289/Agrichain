@@ -1,0 +1,147 @@
+.compare-page {
+  display: grid;
+  gap: 22px;
+}
+
+.compare-header,
+.compare-toolbar,
+.compare-table,
+.compare-state {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+  backdrop-filter: blur(18px);
+}
+
+.compare-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 24px;
+  background:
+    linear-gradient(135deg, rgba(231, 183, 95, 0.13), rgba(94, 200, 215, 0.08)),
+    rgba(255, 255, 255, 0.065);
+}
+
+.compare-eyebrow,
+.compare-header p,
+.compare-row small,
+.compare-state {
+  color: var(--muted);
+}
+
+.compare-header h1 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  line-height: 1;
+}
+
+.compare-header a,
+.compare-actions a,
+.compare-actions button {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  background: rgba(4, 12, 8, 0.45);
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.compare-toolbar {
+  width: fit-content;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  color: var(--primary);
+}
+
+.compare-toolbar select {
+  min-height: 38px;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-weight: 900;
+  outline: none;
+}
+
+.compare-table {
+  overflow: hidden;
+}
+
+.compare-row {
+  display: grid;
+  grid-template-columns: minmax(180px, 1.5fr) repeat(4, minmax(90px, 1fr)) minmax(160px, 1.2fr);
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.compare-row:last-child {
+  border-bottom: 0;
+}
+
+.compare-head {
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.compare-row > span:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.compare-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.compare-actions button {
+  width: 40px;
+  padding: 0;
+  color: var(--danger);
+  cursor: pointer;
+}
+
+.compare-state {
+  padding: 24px;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .compare-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .compare-table {
+    display: grid;
+    gap: 12px;
+    overflow: visible;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .compare-head {
+    display: none;
+  }
+
+  .compare-row {
+    grid-template-columns: 1fr;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, 0.07);
+  }
+}

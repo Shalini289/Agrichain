@@ -10,7 +10,7 @@ router = APIRouter()
 
 # 📦 Request schema
 class ChatRequest(BaseModel):
-    message: str = Field(..., min_length=1)
+    message: str = Field(..., min_length=1, max_length=1000)
     history: List[dict] = Field(default_factory=list)
 
 
@@ -29,7 +29,7 @@ class PredictionResponse(BaseModel):
 @router.post("/", response_model=ChatResponse)
 def chat(req: ChatRequest):
     try:
-        reply = generate_response(req.message, req.history)
+        reply = generate_response(req.message.strip(), req.history[-10:])
 
         if not reply:
             raise ValueError("Empty response from AI")
@@ -37,9 +37,10 @@ def chat(req: ChatRequest):
         return {"reply": reply}
 
     except Exception as e:
+        print(f"AI processing failed: {e}")
         raise HTTPException(
             status_code=500,
-            detail=f"AI processing failed: {str(e)}"
+            detail="AI processing failed"
         )
 
 

@@ -9,6 +9,12 @@ const initialForm = {
   name: "",
   quantity: "",
   price: "",
+  mandiPrice: "",
+  predictedPrice: "",
+  location: "",
+  quality: "standard",
+  status: "listed",
+  notes: "",
 };
 
 const friendlyError = (message) => {
@@ -30,6 +36,8 @@ export default function AddCrop() {
   const errors = useMemo(() => {
     const quantity = Number(form.quantity);
     const price = Number(form.price);
+    const mandiPrice = Number(form.mandiPrice);
+    const predictedPrice = Number(form.predictedPrice);
 
     return {
       name: !form.name.trim() ? "Crop name is required" : "",
@@ -40,6 +48,14 @@ export default function AddCrop() {
       price:
         !form.price || !Number.isFinite(price) || price <= 0
           ? "Price must be a positive number"
+          : "",
+      mandiPrice:
+        form.mandiPrice && (!Number.isFinite(mandiPrice) || mandiPrice <= 0)
+          ? "Mandi price must be a positive number"
+          : "",
+      predictedPrice:
+        form.predictedPrice && (!Number.isFinite(predictedPrice) || predictedPrice <= 0)
+          ? "Predicted price must be a positive number"
           : "",
     };
   }, [form]);
@@ -80,6 +96,12 @@ export default function AddCrop() {
           name: form.name.trim(),
           quantity: Number(form.quantity),
           price: Number(form.price),
+          mandiPrice: form.mandiPrice ? Number(form.mandiPrice) : undefined,
+          predictedPrice: form.predictedPrice ? Number(form.predictedPrice) : undefined,
+          location: form.location.trim(),
+          quality: form.quality,
+          status: form.status,
+          notes: form.notes.trim(),
         }),
       });
 
@@ -160,6 +182,80 @@ export default function AddCrop() {
               onChange={(event) => updateField("price", event.target.value)}
             />
             {showError("price") && <small>{errors.price}</small>}
+          </label>
+
+          <div className="add-crop-grid">
+            <label>
+              <span>Mandi price</span>
+              <input
+                value={form.mandiPrice}
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="32"
+                onBlur={() => setTouched((current) => ({ ...current, mandiPrice: true }))}
+                onChange={(event) => updateField("mandiPrice", event.target.value)}
+              />
+              {showError("mandiPrice") && <small>{errors.mandiPrice}</small>}
+            </label>
+
+            <label>
+              <span>Predicted price</span>
+              <input
+                value={form.predictedPrice}
+                type="number"
+                min="0"
+                step="0.01"
+                placeholder="36"
+                onBlur={() => setTouched((current) => ({ ...current, predictedPrice: true }))}
+                onChange={(event) => updateField("predictedPrice", event.target.value)}
+              />
+              {showError("predictedPrice") && <small>{errors.predictedPrice}</small>}
+            </label>
+          </div>
+
+          <div className="add-crop-grid">
+            <label>
+              <span>Location</span>
+              <input
+                value={form.location}
+                placeholder="Indore mandi"
+                onChange={(event) => updateField("location", event.target.value)}
+              />
+            </label>
+
+            <label>
+              <span>Quality</span>
+              <select
+                value={form.quality}
+                onChange={(event) => updateField("quality", event.target.value)}
+              >
+                <option value="standard">Standard</option>
+                <option value="premium">Premium</option>
+                <option value="organic">Organic</option>
+              </select>
+            </label>
+          </div>
+
+          <label>
+            <span>Status</span>
+            <select
+              value={form.status}
+              onChange={(event) => updateField("status", event.target.value)}
+            >
+              <option value="listed">Listed</option>
+              <option value="reserved">Reserved</option>
+              <option value="sold">Sold</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Notes</span>
+            <textarea
+              value={form.notes}
+              placeholder="Harvest date, packaging, transport notes..."
+              onChange={(event) => updateField("notes", event.target.value)}
+            />
           </label>
 
           {error && <p className="add-crop-error">{error}</p>}

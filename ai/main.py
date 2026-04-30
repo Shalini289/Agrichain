@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -7,26 +9,33 @@ from .routes.health import router as health_router
 app = FastAPI(
     title="AgriChain AI Service",
     description="AI + ML service for chatbot and predictions",
-    version="1.0.0"
+    version="1.0.0",
 )
 
-# 🌍 CORS (IMPORTANT for frontend + backend)
+allowed_origins = [
+    origin.strip()
+    for origin in os.getenv(
+        "ALLOWED_ORIGINS",
+        "http://localhost:3000,http://localhost:5000",
+    ).split(",")
+    if origin.strip()
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # change to frontend URL in production
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# 📌 Routes
 app.include_router(health_router, prefix="")
 app.include_router(chat_router, prefix="/chat")
 
-# 🏠 Root endpoint
+
 @app.get("/")
 def root():
     return {
         "status": "AI Service Running",
-        "endpoints": ["/chat", "/health"]
+        "endpoints": ["/chat", "/health"],
     }

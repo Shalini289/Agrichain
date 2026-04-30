@@ -3,6 +3,7 @@ import http from "http";
 import cors from "cors";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
+import rateLimit from "express-rate-limit";
 import session from "express-session";
 import { Server } from "socket.io";
 import { pathToFileURL } from "url";
@@ -18,8 +19,16 @@ import { socketHandler } from "./sockets/socketHandler.js";
 const app = express();
 const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000";
 const PORT = process.env.PORT || 5000;
+const isProduction = process.env.NODE_ENV === "production";
 
-app.use(express.json());
+if (isProduction && (!process.env.JWT_SECRET || !process.env.SESSION_SECRET)) {
+  throw new Error("JWT_SECRET and SESSION_SECRET are required in production");
+}
+
+app.disable("x-powered-by");
+app.set("trust proxy", 1);
+
+app.use(express.json({ limit: "32kb" }));
 app.use(cookieParser());
 app.use(
   cors({
@@ -28,14 +37,41 @@ app.use(
   })
 );
 app.use(
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 300,
+    standardHeaders: true,
+    legacyHeaders: false,
+  })
+);
+app.use(
+  "/api/auth",
+  rateLimit({
+    windowMs: 15 * 60 * 1000,
+    limit: 40,
+    standardHeaders: true,
+    legacyHeaders: false,
+  })
+);
+app.use((req, res, next) => {
+  const unsafeMethods = ["POST", "PUT", "PATCH", "DELETE"];
+  const origin = req.get("origin");
+
+  if (unsafeMethods.includes(req.method) && origin && origin !== CLIENT_URL) {
+    return res.status(403).json({ message: "Invalid request origin" });
+  }
+
+  next();
+});
+app.use(
   session({
     secret: process.env.SESSION_SECRET || process.env.JWT_SECRET || "dev-session-secret",
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
-      secure: process.env.NODE_ENV === "production",
+      secure: isProduction,
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: isProduction ? "none" : "lax",
     },
   })
 );

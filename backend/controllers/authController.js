@@ -17,6 +17,11 @@ const buildVerifyLink = (token) =>
 const getDevVerifyLink = (token) =>
   process.env.NODE_ENV === "production" ? undefined : buildVerifyLink(token);
 
+const isValidEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+const isStrongEnoughPassword = (password) =>
+  typeof password === "string" && password.length >= 8 && password.length <= 128;
+
 const sendVerificationEmail = async (email, token) => {
   const verifyLink = buildVerifyLink(token);
 
@@ -45,6 +50,18 @@ export const register = async (req, res) => {
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: "All fields required" });
+    }
+
+    if (name.length < 2 || name.length > 80) {
+      return res.status(400).json({ message: "Name must be between 2 and 80 characters" });
+    }
+
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ message: "Enter a valid email address" });
+    }
+
+    if (!isStrongEnoughPassword(password)) {
+      return res.status(400).json({ message: "Password must be between 8 and 128 characters" });
     }
 
     const exists = await User.findOne({ email });
@@ -86,13 +103,20 @@ export const register = async (req, res) => {
       verifyLink: getDevVerifyLink(token),
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Register failed:", err.message);
+    res.status(500).json({ message: "Registration failed" });
   }
 };
 
 export const verifyEmail = async (req, res) => {
   try {
-    const user = await User.findOne({ verifyToken: req.params.token });
+    const token = req.params.token;
+
+    if (!/^[a-f0-9]{64}$/i.test(token)) {
+      return res.status(400).json({ message: "Invalid token" });
+    }
+
+    const user = await User.findOne({ verifyToken: token });
 
     if (!user) return res.status(400).json({ message: "Invalid token" });
 
@@ -102,7 +126,8 @@ export const verifyEmail = async (req, res) => {
 
     res.json({ message: "Email verified" });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Verify email failed:", err.message);
+    res.status(500).json({ message: "Email verification failed" });
   }
 };
 
@@ -113,6 +138,10 @@ export const login = async (req, res) => {
 
     if (!email || !password) {
       return res.status(400).json({ message: "Email and password required" });
+    }
+
+    if (!isValidEmail(email)) {
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const user = await User.findOne({ email });
@@ -141,7 +170,8 @@ export const login = async (req, res) => {
 
     res.json({ user: safeUser });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("Login failed:", err.message);
+    res.status(500).json({ message: "Login failed" });
   }
 };
 
@@ -196,6 +226,7 @@ export const siwe = async (req, res) => {
     res.cookie("token", generateToken(user._id), cookieOptions);
     res.json({ user });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    console.error("SIWE failed:", err.message);
+    res.status(500).json({ message: "Wallet login failed" });
   }
 };

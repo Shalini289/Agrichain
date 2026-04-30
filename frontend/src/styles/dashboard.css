@@ -17,6 +17,44 @@
   box-shadow: var(--shadow);
 }
 
+.dashboard-action,
+.dashboard-toolbar button {
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.dashboard-toolbar {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(180px, 240px) auto auto;
+  gap: 10px;
+}
+
+.dashboard-toolbar input,
+.dashboard-toolbar select {
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(4, 12, 8, 0.58);
+  color: var(--text);
+  outline: none;
+}
+
+.dashboard-toolbar button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
 .dashboard-header h1 {
   font-size: clamp(2rem, 5vw, 3.4rem);
   line-height: 1;
@@ -86,6 +124,83 @@
 
 .crop-card h3 {
   font-size: 1.2rem;
+}
+
+.crop-trust {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid rgba(69, 212, 131, 0.18);
+  border-radius: var(--radius);
+  background: rgba(69, 212, 131, 0.08);
+}
+
+.crop-trust strong {
+  font-size: 1.25rem;
+  color: var(--primary);
+}
+
+.crop-trust span {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.crop-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.crop-card-top span {
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(69, 212, 131, 0.12);
+  color: var(--primary);
+  font-size: 0.78rem;
+  font-weight: 900;
+  text-transform: capitalize;
+}
+
+.crop-actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.crop-actions select,
+.crop-actions a,
+.crop-actions button {
+  min-height: 38px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(4, 12, 8, 0.58);
+  color: var(--text);
+  font-weight: 800;
+}
+
+.crop-actions select {
+  min-width: 0;
+  padding: 0 10px;
+  outline: none;
+}
+
+.crop-actions a,
+.crop-actions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.crop-actions button {
+  font-family: inherit;
 }
 
 .empty-state,
@@ -239,8 +354,16 @@
     flex-direction: column;
   }
 
+  .dashboard-toolbar {
+    grid-template-columns: 1fr;
+  }
+
   .dashboard-stats,
   .ai-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .crop-actions {
     grid-template-columns: 1fr;
   }
 
