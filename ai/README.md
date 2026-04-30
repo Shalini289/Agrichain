@@ -14,9 +14,11 @@ python -m pip install -r ai\requirements.txt
 
 Render deployment note:
 
-- Keep `runtime.txt` as `python-3.12.8`.
-- Python 3.14 can force `pydantic-core` to build from Rust source during deploy, which may fail on Render.
-- If the Render service root is `ai`, Render reads `ai/runtime.txt`; if the service root is the repo root, it reads the root `runtime.txt`.
+- Keep `runtime.txt` and `.python-version` as `3.12.8` / `python-3.12.8`.
+- In Render Dashboard, set `PYTHON_VERSION=3.12.8` in the service environment if logs still show Python 3.14.
+- Python 3.14 can force older `pydantic-core` releases to build from Rust source during deploy, which may fail on Render.
+- `requirements.txt` allows Pydantic 2.12+, so the app can still install on newer Python versions with compatible wheels.
+- If the Render service root is `ai`, Render reads files in `ai`; if the service root is the repo root, it reads files in the root.
 
 The base AI service uses a deterministic fallback response and does not require
 OpenAI, NumPy, scikit-learn, or joblib.
