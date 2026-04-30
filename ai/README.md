@@ -12,6 +12,12 @@ If your active Python does not have the server dependencies:
 python -m pip install -r ai\requirements.txt
 ```
 
+Render deployment note:
+
+- Keep `runtime.txt` as `python-3.12.8`.
+- Python 3.14 can force `pydantic-core` to build from Rust source during deploy, which may fail on Render.
+- If the Render service root is `ai`, Render reads `ai/runtime.txt`; if the service root is the repo root, it reads the root `runtime.txt`.
+
 The base AI service uses a deterministic fallback response and does not require
 OpenAI, NumPy, scikit-learn, or joblib.
 
