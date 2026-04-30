@@ -32,6 +32,14 @@ Optional OpenAI support:
 python -m pip install -r ai\requirements-openai.txt
 ```
 
+Optional Groq support:
+
+```powershell
+python -m pip install -r ai\requirements-groq.txt
+```
+
+Set `GROQ_API_KEY` only if you want Groq chat responses. Without it, the AI service still starts and uses a deterministic fallback reply.
+
 Optional local ML model support:
 
 ```powershell
