@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: agrichain-ai
+    runtime: python
+    plan: free
+    buildCommand: pip install -r ai/requirements.txt
+    startCommand: python start_ai.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
