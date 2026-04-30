@@ -2,9 +2,14 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 from typing import List
 
-from ..services.llm_service import generate_response
-from ..services.prediction import predict_price
-from ..services.reasoning import generate_explanation
+try:
+    from ..services.llm_service import generate_response
+    from ..services.prediction import predict_price
+    from ..services.reasoning import generate_explanation
+except ImportError:
+    from services.llm_service import generate_response
+    from services.prediction import predict_price
+    from services.reasoning import generate_explanation
 
 router = APIRouter()
 
